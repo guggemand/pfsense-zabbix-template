@@ -1093,7 +1093,7 @@ function pfz_syscheck_cron_install($enable=true){
 function pfz_syscheck_cron (){	
 	$filename = "/tmp/sysversion.json";	
 	$upToDate = pfz_packages_uptodate();
-	$sysVersion = get_system_pkg_version();
+	$sysVersion = get_system_pkg_version(false, false, false);
 	$sysVersion["packages_update"] = $upToDate;
 	$sysVersionJson = json_encode($sysVersion);
 	if (file_exists($filename)) {
