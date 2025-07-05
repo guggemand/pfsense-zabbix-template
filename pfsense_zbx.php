@@ -1148,7 +1148,11 @@ function pfz_get_system_value($section){
 // Taken from /usr/local/www/widgets/widgets/smart_status.widget.php
 function pfz_get_smart_status(){
 
-	$devs = get_drive_list();
+	if (function_exists('get_smart_drive_list')) {
+		$devs = get_smart_drive_list();
+	} else {
+		$devs = get_drive_list();
+	}
 	$status = 0;
 	foreach ($devs as $dev)  { ## for each found drive do                
                 $smartdrive_is_displayed = true;
