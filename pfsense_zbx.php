@@ -1114,6 +1114,11 @@ function pfz_get_system_value($section){
 	$filename = "/tmp/sysversion.json";	
 	if(file_exists($filename)) {
 		$sysVersion = json_decode(file_get_contents($filename), true);
+
+                // If sysversion.json is over 24 hours old, reinstall crontab
+		if (time()-filemtime($filename) > 24*60*60 ) {
+			pfz_syscheck_cron_install();
+		}
 	} else {
 		// Install the cron script
 		pfz_syscheck_cron_install();
