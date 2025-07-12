@@ -1097,6 +1097,8 @@ function pfz_syscheck_cron (){
 			return true;
 		}
 	}
+	// It seems get_system_pkg_version fails more when run at x:00
+	sleep(rand(15, 120));
 	$upToDate = pfz_packages_uptodate();
 	$sysVersion = get_system_pkg_version(false, false, false);
 	$sysVersion["packages_update"] = $upToDate;
