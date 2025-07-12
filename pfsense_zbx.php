@@ -1104,19 +1104,17 @@ function pfz_syscheck_cron_install($enable=true){
 // So it is saved via a cronjob.
 function pfz_syscheck_cron (){	
 	$filename = "/tmp/sysversion.json";	
+	if (file_exists($filename)) {
+		if ((time()-filemtime($filename) < CRON_TIME_LIMIT ) ) {
+			return true;
+		}
+	}
 	$upToDate = pfz_packages_uptodate();
 	$sysVersion = get_system_pkg_version(false, false, false);
 	$sysVersion["packages_update"] = $upToDate;
 	$sysVersionJson = json_encode($sysVersion);
-	if (file_exists($filename)) {
-		if ((time()-filemtime($filename) > CRON_TIME_LIMIT ) ) {
-			@unlink($filename);
-		}
-	}
-	if (file_exists($filename)==false) {	  
-		touch($filename);
-		file_put_contents($filename, $sysVersionJson);
-	}	
+	touch($filename);
+	file_put_contents($filename, $sysVersionJson);
 	return true;
 } 
 
