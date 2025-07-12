@@ -1101,6 +1101,10 @@ function pfz_syscheck_cron (){
 	sleep(rand(15, 120));
 	$upToDate = pfz_packages_uptodate();
 	$sysVersion = get_system_pkg_version(false, false, false);
+	// Reuse the old info if we have it, and we cant fetch new info
+	if (!$sysVersion['version'] && file_exists($filename)) {
+		$sysVersion = json_decode(file_get_contents($filename), true);
+	}
 	$sysVersion["packages_update"] = $upToDate;
 	$sysVersionJson = json_encode($sysVersion);
 	touch($filename);
