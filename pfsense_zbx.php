@@ -556,7 +556,8 @@ function pfz_gw_value($gw, $valuekey) {
           $value = $gws[$gw][$valuekey];
           if ($valuekey=="status") { 
                //Issue #70: Gateway Forced Down
-               if ($gws[$gw]["substatus"]<>"none") 
+               //Issue #182: Gateway not marked as Down
+               if (($gws[$gw]["status"]=="force_down") && ($gws[$gw]["substatus"]<>"none")) 
                     $value = $gws[$gw]["substatus"];
                
                $value = pfz_valuemap("gateway.status", $value);
