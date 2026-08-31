@@ -1671,10 +1671,6 @@ switch ($mainArgument){
      	  pfz_speedtest_cron_install();
      	  pfz_speedtest_cron();
      	  break;
-	 case "syscheck_cron":
-		   pfz_syscheck_cron_install();
-		   pfz_syscheck_cron();
-		   break;
      case "cron_cleanup":
      	  pfz_speedtest_cron_install(false);
      	  pfz_syscheck_cron_install(false);
