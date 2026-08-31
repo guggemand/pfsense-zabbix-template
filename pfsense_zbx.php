@@ -1104,19 +1104,29 @@ function pfz_syscheck_cron_install($enable=true){
 // So it is saved via a cronjob.
 function pfz_syscheck_cron (){	
 	$filename = "/tmp/sysversion.json";	
-	$upToDate = pfz_packages_uptodate();
-	$sysVersion = get_system_pkg_version();
-	$sysVersion["packages_update"] = $upToDate;
-	$sysVersionJson = json_encode($sysVersion);
 	if (file_exists($filename)) {
-		if ((time()-filemtime($filename) > CRON_TIME_LIMIT ) ) {
-			@unlink($filename);
+		if ((time()-filemtime($filename) < CRON_TIME_LIMIT ) ) {
+			return true;
 		}
 	}
-	if (file_exists($filename)==false) {	  
-		touch($filename);
-		file_put_contents($filename, $sysVersionJson);
-	}	
+	// It seems get_system_pkg_version fails more when run at x:00
+	sleep(rand(15, 120));
+	// The sleep above ate into the time limit, so start it over
+	set_time_limit(CRON_TIME_LIMIT);
+	$upToDate = pfz_packages_uptodate();
+	$sysVersion = get_system_pkg_version(false, false, false);
+	// Reuse the old info if we have it, and we cant fetch new info
+	if (empty($sysVersion['version']) && file_exists($filename)) {
+		$sysVersion = json_decode(file_get_contents($filename), true);
+	}
+	// Neither source is guaranteed to hand back an array
+	if (is_array($sysVersion)==false) {
+		$sysVersion = array();
+	}
+	$sysVersion["packages_update"] = $upToDate;
+	$sysVersionJson = json_encode($sysVersion);
+	touch($filename);
+	file_put_contents($filename, $sysVersionJson);
 	return true;
 } 
 
