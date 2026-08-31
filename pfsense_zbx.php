@@ -8,7 +8,7 @@ This program is licensed under Apache 2.0 License
 */
 
 //Some Useful defines
-define ('SCRIPT_VERSION','0.24.7');
+define ('SCRIPT_VERSION','0.24.7-dlx-20260901');
 
 define('SPEEDTEST_INTERVAL', 8); //Speedtest Interval (in hours)
 define('CRON_TIME_LIMIT', 300); // Time limit in seconds of speedtest and sysinfo 
