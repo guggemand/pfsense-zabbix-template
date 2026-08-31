@@ -1122,6 +1122,12 @@ function pfz_syscheck_cron (){
 
 //System Information
 function pfz_get_system_value($section){
+	// The script version is not part of the cached system info
+	if ($section == "script_version") {
+		echo SCRIPT_VERSION;
+		return;
+	}
+
 	$filename = "/tmp/sysversion.json";	
 	if(file_exists($filename)) {
 		$sysVersion = json_decode(file_get_contents($filename), true);
@@ -1135,9 +1141,6 @@ function pfz_get_system_value($section){
 		}
 	}
 	switch ($section){
-        case "script_version":
-			echo SCRIPT_VERSION;
-			break;
 		case "version":
             echo( $sysVersion['version']);
             break;
