@@ -1139,6 +1139,7 @@ function pfz_get_system_value($section){
 		} else {
 			echo "";
 		}
+		return;
 	}
 	switch ($section){
 		case "version":
