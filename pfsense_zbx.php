@@ -1164,9 +1164,29 @@ function pfz_get_system_value($section){
      }
 }
 
+//Send our stderr to /dev/null, the Zabbix agent merges it into the item value
+// PHP has no dup2(): closing fd 2 frees it for the next fopen(), the extra opens cover a closed stdin/stdout
+function pfz_silence_stderr(){
+
+	global $pfz_stderr_sink;
+
+	if (is_array($pfz_stderr_sink))
+		return;
+
+	fclose(STDERR);
+
+	$pfz_stderr_sink = array();
+	for ($i = 0; $i < 3; $i++)
+		$pfz_stderr_sink[] = fopen('/dev/null', 'w');
+
+}
+
 //S.M.A.R.T Status
 // Taken from /usr/local/www/widgets/widgets/smart_status.widget.php
 function pfz_get_smart_status(){
+
+	// get_drive_list() runs "diskinfo -v" on non-disk devices like cd0, which complains on stderr
+	pfz_silence_stderr();
 
 	$devs = get_drive_list();
 	$status = 0;
